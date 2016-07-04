@@ -193,7 +193,7 @@
 				}
 
 				var drawnObject = new THREE.Mesh( geometry, defaultMaterial );
-////				scene.add( drawnObject );
+				scene.add( drawnObject );
 
 				pickingScene.add( new THREE.Mesh( pickingGeometry, pickingMaterial ) );
 
@@ -203,22 +203,24 @@
 //					new THREE.MeshLambertMaterial( { color: 0xffff00 }
 					new THREE.MeshLambertMaterial( { color: 0xff0000 }
 				) );
-////				scene.add( highlightBox );
+				scene.add( highlightBox );
 
 //***********
 
-				var segments = 5;
+				var segments = 64;
 				var positions = new Float32Array( segments * 3 );
 				var colors = new Float32Array( segments * 3 );
 				var material = new THREE.LineBasicMaterial({ vertexColors: THREE.VertexColors });
+				var geometry1 = new THREE.BufferGeometry();
+				var qw = 0;
 
 				for ( var ww = 0; ww < 4; ww ++ ) {
 
 					switch (ww) {
-						case 0: var geometry1 = new THREE.BufferGeometry(); i = 0; j = 0; break;
-						case 1: var geometry2 = new THREE.BufferGeometry(); i = 0; j = 4; break;
-						case 2: var geometry3 = new THREE.BufferGeometry(); i = 4; j = 0; break;
-						case 3: var geometry4 = new THREE.BufferGeometry(); i = 4; j = 4; break;
+						case 0: i = 0; j = 0; break;
+						case 1: i = 0; j = 4; break;
+						case 2: i = 4; j = 0; break;
+						case 3: i = 4; j = 4; break;
 					}
 					for ( var qq = 0; qq < 5; qq ++ ) {
 						switch (qq) {
@@ -233,40 +235,78 @@
 						var y = i * ki * kiy + j * kj * kjy + k * kk * kky + l * kl * kly;
 						var z = i * ki * kiz + j * kj * kjz + k * kk * kkz + l * kl * klz;
 
-						positions[ qq * 3 ] = x;
-						positions[ qq * 3 + 1 ] = y;
-						positions[ qq * 3 + 2 ] = z;
+						positions[ qw * 3 ] = x;
+						positions[ qw * 3 + 1 ] = y;
+						positions[ qw * 3 + 2 ] = z;
 
-						colors[ qq * 3 ] = 0.1;
-						colors[ qq * 3 + 1 ] = 0.1;
-						colors[ qq * 3 + 2 ] = 0.1;
-					}
-//					geometry1.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-//					geometry1.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-//					geometry1.computeBoundingSphere();
-					switch (ww) {
-						case 0: geometry1.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-								geometry1.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-								var mesh1 = new THREE.Line( geometry1, material );
-								scene.add( mesh1 );
-								break;
-						case 1: geometry2.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-								geometry2.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-								var mesh2 = new THREE.Line( geometry2, material );
-								scene.add( mesh2 );
-								break;
-						case 2: geometry3.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-								geometry3.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-								var mesh3 = new THREE.Line( geometry3, material );
-								scene.add( mesh3 );
-								break;
-						case 3: geometry4.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-								geometry4.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
-								var mesh4 = new THREE.Line( geometry4, material );
-								scene.add( mesh4 );
-								break;
+						colors[ qw * 3 ] = 0.1;
+						colors[ qw * 3 + 1 ] = 0.1;
+						colors[ qw * 3 + 2 ] = 0.1;
+						
+						qw ++;
+
+						if((qw != 1) && (qw != 8) && (qw != 9) && (qw != 16) && (qw != 17) && (qw != 24) && (qw != 25) && (qw != 32)) {
+							positions[ qw * 3 ] = x;
+							positions[ qw * 3 + 1 ] = y;
+							positions[ qw * 3 + 2 ] = z;
+
+							colors[ qw * 3 ] = 0.1;
+							colors[ qw * 3 + 1 ] = 0.1;
+							colors[ qw * 3 + 2 ] = 0.1;
+							
+							qw ++;
+						}
 					}
 				}	
+				for ( var ww = 0; ww < 4; ww ++ ) {
+
+					switch (ww) {
+						case 0: k = 0; l = 0; break;
+						case 1: k = 0; l = 4; break;
+						case 2: k = 4; l = 0; break;
+						case 3: k = 4; l = 4; break;
+					}
+					for ( var qq = 0; qq < 5; qq ++ ) {
+						switch (qq) {
+							case 0: { i = 4; j = 4; }; break;
+							case 1: { i = 0; j = 4; }; break;
+							case 2: { i = 0; j = 0; }; break;
+							case 3: { i = 4; j = 0; }; break;
+							case 4: { i = 4; j = 4; }; break;
+						}
+
+						var x = i * ki * kix + j * kj * kjx + k * kk * kkx + l * kl * klx;
+						var y = i * ki * kiy + j * kj * kjy + k * kk * kky + l * kl * kly;
+						var z = i * ki * kiz + j * kj * kjz + k * kk * kkz + l * kl * klz;
+
+						positions[ qw * 3 ] = x;
+						positions[ qw * 3 + 1 ] = y;
+						positions[ qw * 3 + 2 ] = z;
+
+						colors[ qw * 3 ] = 0.1;
+						colors[ qw * 3 + 1 ] = 0.1;
+						colors[ qw * 3 + 2 ] = 0.1;
+						
+						qw ++;
+
+						if((qw != 33) && (qw != 40) && (qw != 41) && (qw != 48) && (qw != 49) && (qw != 56) && (qw != 57) && (qw != 64)) {
+							positions[ qw * 3 ] = x;
+							positions[ qw * 3 + 1 ] = y;
+							positions[ qw * 3 + 2 ] = z;
+
+							colors[ qw * 3 ] = 0.1;
+							colors[ qw * 3 + 1 ] = 0.1;
+							colors[ qw * 3 + 2 ] = 0.1;
+							
+							qw ++;
+						}
+					}
+				}	
+				geometry1.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+				geometry1.addAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
+//				geometry1.computeBoundingSphere();
+				var mesh1 = new THREE.LineSegments( geometry1, material );
+				scene.add( mesh1 );
 //***********
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setClearColor( 0xffffff );
